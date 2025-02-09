@@ -1,4 +1,6 @@
 # pdfghost/functions/merger.py
+from PyPDF2 import PdfMerger
+from ..utils.path_validator import validate_file_path
 
 
 def merge_pdfs(output_path, *input_paths):
@@ -10,3 +12,13 @@ def merge_pdfs(output_path, *input_paths):
     :raises FileNotFoundError: If any input file does not exist.
     """
     # Validate input file paths
+    for path in input_paths:
+        validate_file_path(path)
+
+    merger = PdfMerger()
+
+    for path in input_paths:
+        merger.append(path)
+
+    merger.write(output_path)
+    merger.close()
