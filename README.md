@@ -5,6 +5,7 @@
 ## Features
 
 - **Merge PDFs**: Combine multiple PDFs into a single file.
+- **Split PDFs**: Split a PDF into smaller files based on page ranges.
 
 ## Installation
 
@@ -25,6 +26,13 @@ pip install pdfghost
 from pdfghost import merge_pdfs
 
 merge_pdfs("output.pdf", "file1.pdf", "file2.pdf")
+```
+
+### Split PDF
+```python
+from pdfghost import split_pdf
+
+split_pdf("input.pdf", "output_folder", split_range=(0, 2))
 ```
 
 ## Testing
