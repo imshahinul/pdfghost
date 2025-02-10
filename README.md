@@ -8,6 +8,8 @@
 - **Split PDFs**: Split a PDF into smaller files based on page ranges.
 - **Remove Pages**: Remove specific pages with page index, remove page from start and end.
 - **Rotate Pages**: Rotate all or specific pages in a PDF.
+- **Insert Pages**: Insert pages or specific pages in a PDF.
+
 
 ## Installation
 
@@ -70,6 +72,18 @@ rotate_pdf("input.pdf", "output.pdf", rotation=90)
 
 # Rotate specific pages by 180 degrees
 rotate_pdf("input.pdf", "output.pdf", rotation=180, pages_to_rotate=[0, 2])
+```
+
+### Insert Pages
+```python
+from pdfghost import insert_pages
+
+# Insert pages at specific positions
+insertions = [
+    (1, "insert1.pdf"),  # Insert pages from insert1.pdf at position 1
+    (4, "insert2.pdf"),  # Insert pages from insert2.pdf at position 4
+]
+insert_pages("input.pdf", "output.pdf", insertions)
 ```
 
 ## Testing
