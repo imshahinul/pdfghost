@@ -12,7 +12,17 @@ def remove_pages(input_path, output_path, pages_to_remove):
     :param pages_to_remove: List of page indices to remove (0-based).
     :raises FileNotFoundError: If the input file does not exist.
     """
+    validate_file_path(input_path)
 
+    reader = PdfReader(input_path)
+    writer = PdfWriter()
+
+    for i in range(len(reader.pages)):
+        if i not in pages_to_remove:
+            writer.add_page(reader.pages[i])
+
+    with open(output_path, "wb") as output_pdf:
+        writer.write(output_pdf)
 
 
 def remove_pages_from_start(input_path, output_path, num_pages):
@@ -24,7 +34,16 @@ def remove_pages_from_start(input_path, output_path, num_pages):
     :param num_pages: Number of pages to remove from the start.
     :raises FileNotFoundError: If the input file does not exist.
     """
+    validate_file_path(input_path)
 
+    reader = PdfReader(input_path)
+    writer = PdfWriter()
+
+    for i in range(num_pages, len(reader.pages)):
+        writer.add_page(reader.pages[i])
+
+    with open(output_path, "wb") as output_pdf:
+        writer.write(output_pdf)
 
 
 def remove_pages_from_end(input_path, output_path, num_pages):
@@ -36,3 +55,13 @@ def remove_pages_from_end(input_path, output_path, num_pages):
     :param num_pages: Number of pages to remove from the end.
     :raises FileNotFoundError: If the input file does not exist.
     """
+    validate_file_path(input_path)
+
+    reader = PdfReader(input_path)
+    writer = PdfWriter()
+
+    for i in range(len(reader.pages) - num_pages):
+        writer.add_page(reader.pages[i])
+
+    with open(output_path, "wb") as output_pdf:
+        writer.write(output_pdf)
