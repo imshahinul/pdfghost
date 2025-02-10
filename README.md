@@ -6,6 +6,7 @@
 
 - **Merge PDFs**: Combine multiple PDFs into a single file.
 - **Split PDFs**: Split a PDF into smaller files based on page ranges.
+- **Remove Pages**: Remove specific pages with page index, remove page from start and end.
 
 ## Installation
 
@@ -33,6 +34,30 @@ merge_pdfs("output.pdf", "file1.pdf", "file2.pdf")
 from pdfghost import split_pdf
 
 split_pdf("input.pdf", "output_folder", split_range=(0, 2))
+```
+
+### Remove Specific Pages
+```python
+from pdfghost import remove_pages
+
+# Remove pages with indices 0, 2, and 4 (0-based)
+remove_pages("input.pdf", "output.pdf", pages_to_remove=[0, 2, 4])
+```
+
+### Remove Pages from Start
+```python
+from pdfghost import remove_pages_from_start
+
+# Remove the first 3 pages
+remove_pages_from_start("input.pdf", "output.pdf", num_pages=3)
+```
+
+### Remove Pages from End
+```python
+from pdfghost import remove_pages_from_end
+
+# Remove the last 2 pages
+remove_pages_from_end("input.pdf", "output.pdf", num_pages=2)
 ```
 
 ## Testing
