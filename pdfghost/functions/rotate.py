@@ -14,3 +14,19 @@ def rotate_pdf(input_path, output_path, rotation, pages_to_rotate=None):
     :raises FileNotFoundError: If the input file does not exist.
     :raises ValueError: If the rotation angle is invalid.
     """
+    validate_file_path(input_path)
+
+    if rotation not in [90, 180, 270]:
+        raise ValueError("Rotation angle must be 90, 180, or 270 degrees.")
+
+    reader = PdfReader(input_path)
+    writer = PdfWriter()
+
+    for i in range(len(reader.pages)):
+        page = reader.pages[i]
+        if pages_to_rotate is None or i in pages_to_rotate:
+            page.rotate(rotation)
+        writer.add_page(page)
+
+    with open(output_path, "wb") as output_pdf:
+        writer.write(output_pdf)
