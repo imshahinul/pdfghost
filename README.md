@@ -7,6 +7,7 @@
 - **Merge PDFs**: Combine multiple PDFs into a single file.
 - **Split PDFs**: Split a PDF into smaller files based on page ranges.
 - **Remove Pages**: Remove specific pages with page index, remove page from start and end.
+- **Rotate Pages**: Rotate all or specific pages in a PDF.
 
 ## Installation
 
@@ -58,6 +59,17 @@ from pdfghost import remove_pages_from_end
 
 # Remove the last 2 pages
 remove_pages_from_end("input.pdf", "output.pdf", num_pages=2)
+```
+
+### Rotate Pages
+```python
+from pdfghost import rotate_pdf
+
+# Rotate all pages by 90 degrees
+rotate_pdf("input.pdf", "output.pdf", rotation=90)
+
+# Rotate specific pages by 180 degrees
+rotate_pdf("input.pdf", "output.pdf", rotation=180, pages_to_rotate=[0, 2])
 ```
 
 ## Testing
