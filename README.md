@@ -12,6 +12,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Rotate Pages**: Rotate all or specific pages in a PDF.
 - **Insert Pages**: Insert pages or specific pages in a PDF.
 - **Rearrange Pages**: Rearrange pages of a pdf file or merge pdf files and then rearrange all the pages.
+- **Compress PDFs**: Reduce the file size of a PDF by optimizing images and removing unnecessary metadata.
 
 ## Installation
 
@@ -117,6 +118,18 @@ page_order = [
     (0, 1),  # Page 2 from file1.pdf
 ]
 merge_and_rearrange("output.pdf", page_order, "file1.pdf", "file2.pdf")
+```
+
+### Compress PDF
+
+```python
+from pdfghost import compress_pdf
+
+# Compress a PDF with medium compression
+compress_pdf("input.pdf", "output.pdf", power=3)
+
+# Compress a PDF with maximum compression
+compress_pdf("input.pdf", "output.pdf", power=5)
 ```
 
 ## Testing
