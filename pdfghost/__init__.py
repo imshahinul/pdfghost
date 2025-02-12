@@ -4,6 +4,7 @@ from .functions.remover import remove_pages, remove_pages_from_end, remove_pages
 from .functions.rotate import rotate_pdf
 from .functions.inserter import insert_pages
 from .functions.rearranger import rearrange_pdf, merge_and_rearrange
+from .functions.compress import compress_pdf
 
 __all__ = [
     "merge_pdfs",
@@ -15,4 +16,5 @@ __all__ = [
     "insert_pages",
     "rearrange_pdf",
     "merge_and_rearrange",
+    "compress_pdf",
 ]
