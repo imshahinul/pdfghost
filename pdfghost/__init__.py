@@ -5,6 +5,7 @@ from .functions.rotate import rotate_pdf
 from .functions.inserter import insert_pages
 from .functions.rearranger import rearrange_pdf, merge_and_rearrange
 from .functions.compress import compress_pdf
+from .functions.watermark import add_text_watermark, add_image_watermark, remove_watermark
 
 __all__ = [
     "merge_pdfs",
@@ -17,4 +18,7 @@ __all__ = [
     "rearrange_pdf",
     "merge_and_rearrange",
     "compress_pdf",
+    "add_text_watermark",
+    "add_image_watermark",
+    "remove_watermark",
 ]
