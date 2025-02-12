@@ -13,6 +13,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Insert Pages**: Insert pages or specific pages in a PDF.
 - **Rearrange Pages**: Rearrange pages of a pdf file or merge pdf files and then rearrange all the pages.
 - **Compress PDFs**: Reduce the file size of a PDF by optimizing images and removing unnecessary metadata.
+- **Watermarking**: Add or remove text or image watermarks to PDFs.
 
 ## Installation
 
@@ -130,6 +131,39 @@ compress_pdf("input.pdf", "output.pdf", power=3)
 
 # Compress a PDF with maximum compression
 compress_pdf("input.pdf", "output.pdf", power=5)
+```
+
+### Add Text Watermark
+```python
+from pdfghost import add_text_watermark
+
+# Add a text watermark to all pages
+add_text_watermark("input.pdf", "output.pdf", text="Confidential")
+
+# Add a text watermark to specific pages
+add_text_watermark("input.pdf", "output.pdf", text="Confidential", pages_to_watermark=[0, 2])
+```
+
+### Add Image Watermark
+```python
+from pdfghost import add_image_watermark
+
+# Add an image watermark to all pages
+add_image_watermark("input.pdf", "output.pdf", image_path="watermark.png")
+
+# Add an image watermark to specific pages
+add_image_watermark("input.pdf", "output.pdf", image_path="watermark.png", pages_to_watermark=[1])
+```
+
+### Remove Watermark
+```python
+from pdfghost import remove_watermark
+
+# Remove watermarks from all pages
+remove_watermark("input.pdf", "output.pdf")
+
+# Remove watermarks from specific pages
+remove_watermark("input.pdf", "output.pdf", pages_to_clean=[0, 2])
 ```
 
 ## Testing
