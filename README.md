@@ -14,6 +14,8 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Rearrange Pages**: Rearrange pages of a pdf file or merge pdf files and then rearrange all the pages.
 - **Compress PDFs**: Reduce the file size of a PDF by optimizing images and removing unnecessary metadata.
 - **Watermarking**: Add or remove text or image watermarks to PDFs.
+- **Image to PDF**: Covert Images to PDF file.
+- **PDF to Image**: Convert pages of a PDF file to images.
 
 ## Installation
 
@@ -164,6 +166,25 @@ remove_watermark("input.pdf", "output.pdf")
 
 # Remove watermarks from specific pages
 remove_watermark("input.pdf", "output.pdf", pages_to_clean=[0, 2])
+```
+
+### Convert PDF to Images
+```python
+from pdfghost import pdf_to_images
+
+# Convert each page of a PDF into PNG images
+pdf_to_images("input.pdf", "output_folder", format="png")
+
+# Convert each page of a PDF into JPG images
+pdf_to_images("input.pdf", "output_folder", format="jpg")
+```
+
+### Convert Images to PDF
+```python
+from pdfghost import images_to_pdf
+
+# Convert multiple image files into a single PDF
+images_to_pdf("output.pdf", "image1.png", "image2.jpg")
 ```
 
 ## Testing
