@@ -6,6 +6,7 @@ from .functions.inserter import insert_pages
 from .functions.rearranger import rearrange_pdf, merge_and_rearrange
 from .functions.compress import compress_pdf
 from .functions.watermark import add_text_watermark, add_image_watermark, remove_watermark
+from .functions.convert.image import images_to_pdf, pdf_to_images
 
 __all__ = [
     "merge_pdfs",
@@ -21,4 +22,6 @@ __all__ = [
     "add_text_watermark",
     "add_image_watermark",
     "remove_watermark",
+    "pdf_to_images",
+    "images_to_pdf",
 ]
