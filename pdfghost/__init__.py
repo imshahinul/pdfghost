@@ -10,6 +10,7 @@ from .functions.convert.image import images_to_pdf, pdf_to_images
 from .functions.encryption import encrypt_pdf, decrypt_pdf
 from .functions.extract import extract_text, extract_images
 from .functions.page_number import add_page_numbers
+from .functions.convert.html import pdf_to_html
 
 __all__ = [
     "merge_pdfs",
@@ -31,5 +32,6 @@ __all__ = [
     "decrypt_pdf",
     "extract_text",
     "extract_images",
-    "add_page_numbers"
+    "add_page_numbers",
+    "pdf_to_html",
 ]
