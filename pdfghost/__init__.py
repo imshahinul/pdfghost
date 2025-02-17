@@ -9,6 +9,7 @@ from .functions.watermark import add_text_watermark, add_image_watermark, remove
 from .functions.convert.image import images_to_pdf, pdf_to_images
 from .functions.encryption import encrypt_pdf, decrypt_pdf
 from .functions.extract import extract_text, extract_images
+from .functions.page_number import add_page_numbers
 
 __all__ = [
     "merge_pdfs",
@@ -26,4 +27,9 @@ __all__ = [
     "remove_watermark",
     "pdf_to_images",
     "images_to_pdf",
+    "encrypt_pdf",
+    "decrypt_pdf",
+    "extract_text",
+    "extract_images",
+    "add_page_numbers"
 ]
