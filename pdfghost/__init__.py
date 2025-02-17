@@ -11,6 +11,7 @@ from .functions.encryption import encrypt_pdf, decrypt_pdf
 from .functions.extract import extract_text, extract_images
 from .functions.page_number import add_page_numbers
 from .functions.convert.html import pdf_to_html
+from .functions.convert.rtf import markdown_to_pdf, latex_to_pdf
 
 __all__ = [
     "merge_pdfs",
@@ -34,4 +35,6 @@ __all__ = [
     "extract_images",
     "add_page_numbers",
     "pdf_to_html",
+    "markdown_to_pdf",
+    "latex_to_pdf",
 ]
