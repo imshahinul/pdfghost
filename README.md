@@ -18,6 +18,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **PDF to Image**: Convert pages of a PDF file to images.
 - **Encrypt/Decrypt PDFs**: Add password protection to PDFs and decrypt them with the correct password.
 - **Extract Text/Images**: Extract text or images from a PDF.
+- **Add Page Numbers**: Insert page numbers at the bottom or top of each page.
 
 ## Installation
 
@@ -231,6 +232,17 @@ from pdfghost import extract_images
 
 # Extract all images from a PDF and save them as separate image files
 extract_images("input.pdf", "output_folder")
+```
+
+### Add Page Numbers
+```python
+from pdfghost import add_page_numbers
+
+# Add page numbers at the bottom of each page
+add_page_numbers("input.pdf", "output.pdf", position="bottom")
+
+# Add page numbers at the top of each page
+add_page_numbers("input.pdf", "output.pdf", position="top")
 ```
 
 ## Testing
