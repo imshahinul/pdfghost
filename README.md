@@ -16,6 +16,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Watermarking**: Add or remove text or image watermarks to PDFs.
 - **Image to PDF**: Covert Images to PDF file.
 - **PDF to Image**: Convert pages of a PDF file to images.
+- **Encrypt/Decrypt PDFs**: Add password protection to PDFs and decrypt them with the correct password.
 
 ## Installation
 
@@ -185,6 +186,22 @@ from pdfghost import images_to_pdf
 
 # Convert multiple image files into a single PDF
 images_to_pdf("output.pdf", "image1.png", "image2.jpg")
+```
+
+### Encrypt PDF
+```python
+from pdfghost import encrypt_pdf
+
+# Encrypt a PDF with a password
+encrypt_pdf("input.pdf", "output.pdf", password="mypassword")
+```
+
+### Decrypt PDF
+```python
+from pdfghost import decrypt_pdf
+
+# Decrypt a PDF with a password
+decrypt_pdf("input.pdf", "output.pdf", password="mypassword")
 ```
 
 ## Testing
