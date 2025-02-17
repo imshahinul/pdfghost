@@ -20,6 +20,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Extract Text/Images**: Extract text or images from a PDF.
 - **Add Page Numbers**: Insert page numbers at the bottom or top of each page.
 - **Convert PDFs to HTML**: Convert PDFs into structured HTML files.
+- **Generate PDFs from Markdown/LaTeX**: Convert Markdown or LaTeX files into well-formatted PDFs.
 
 ## Installation
 
@@ -32,6 +33,63 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 ```bash
 pip install pdfghost
 ```
+
+---
+
+### External Dependencies
+
+For **Markdown-to-PDF** and **LaTeX-to-PDF** conversion, the following external tools are required:
+
+1. **Pandoc**: For converting Markdown to PDF.
+2. **BasicTeX**: A lightweight LaTeX distribution for converting LaTeX to PDF.
+
+#### Installing Pandoc
+
+##### **MacOS**
+
+If you have Homebrew installed, run:
+
+```bash
+brew install pandoc
+```
+
+##### **Linux (Debian/Ubuntu)**
+
+```bash
+sudo apt-get update
+sudo apt-get install pandoc
+```
+
+##### **Windows**
+
+Download the Pandoc installer from the official website [here](https://pandoc.org/installing.html) and follow the
+installation instructions.
+
+#### Installing BasicTeX
+
+##### **MacOS**
+
+1. Download BasicTeX from [here](https://www.tug.org/mactex/morepackages.html).
+2. Install it by following the on-screen instructions.
+3. Add the following to your `.bashrc` or `.zshrc` file:
+   ```bash
+   export PATH="/usr/local/texlive/2023/bin/universal-darwin:$PATH"
+   ```
+
+##### **Linux (Debian/Ubuntu)**
+
+1. Install `texlive` (a full LaTeX distribution):
+   ```bash
+   sudo apt-get update
+   sudo apt-get install texlive
+   ```
+
+##### **Windows**
+
+1. Download and install MiKTeX (a lightweight LaTeX distribution) from [here](https://miktex.org/download).
+2. Follow the installation instructions.
+
+---
 
 ## Usage
 
@@ -236,6 +294,7 @@ extract_images("input.pdf", "output_folder")
 ```
 
 ### Add Page Numbers
+
 ```python
 from pdfghost import add_page_numbers
 
@@ -247,11 +306,30 @@ add_page_numbers("input.pdf", "output.pdf", position="top")
 ```
 
 ### Convert PDF to HTML
+
 ```python
 from pdfghost import pdf_to_html
 
 # Convert a PDF into a structured HTML file
 pdf_to_html("input.pdf", "output.html")
+```
+
+### Convert Markdown to PDF
+
+```python
+from pdfghost import markdown_to_pdf
+
+# Convert a Markdown file into a PDF
+markdown_to_pdf("input.md", "output.pdf")
+```
+
+### Convert LaTeX to PDF
+
+```python
+from pdfghost import latex_to_pdf
+
+# Convert a LaTeX file into a PDF
+latex_to_pdf("input.tex", "output.pdf")
 ```
 
 ## Testing
