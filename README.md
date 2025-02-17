@@ -17,6 +17,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Image to PDF**: Covert Images to PDF file.
 - **PDF to Image**: Convert pages of a PDF file to images.
 - **Encrypt/Decrypt PDFs**: Add password protection to PDFs and decrypt them with the correct password.
+- **Extract Text/Images**: Extract text or images from a PDF.
 
 ## Installation
 
@@ -137,6 +138,7 @@ compress_pdf("input.pdf", "output.pdf", power=5)
 ```
 
 ### Add Text Watermark
+
 ```python
 from pdfghost import add_text_watermark
 
@@ -148,6 +150,7 @@ add_text_watermark("input.pdf", "output.pdf", text="Confidential", pages_to_wate
 ```
 
 ### Add Image Watermark
+
 ```python
 from pdfghost import add_image_watermark
 
@@ -159,6 +162,7 @@ add_image_watermark("input.pdf", "output.pdf", image_path="watermark.png", pages
 ```
 
 ### Remove Watermark
+
 ```python
 from pdfghost import remove_watermark
 
@@ -170,6 +174,7 @@ remove_watermark("input.pdf", "output.pdf", pages_to_clean=[0, 2])
 ```
 
 ### Convert PDF to Images
+
 ```python
 from pdfghost import pdf_to_images
 
@@ -181,6 +186,7 @@ pdf_to_images("input.pdf", "output_folder", format="jpg")
 ```
 
 ### Convert Images to PDF
+
 ```python
 from pdfghost import images_to_pdf
 
@@ -189,6 +195,7 @@ images_to_pdf("output.pdf", "image1.png", "image2.jpg")
 ```
 
 ### Encrypt PDF
+
 ```python
 from pdfghost import encrypt_pdf
 
@@ -197,11 +204,33 @@ encrypt_pdf("input.pdf", "output.pdf", password="mypassword")
 ```
 
 ### Decrypt PDF
+
 ```python
 from pdfghost import decrypt_pdf
 
 # Decrypt a PDF with a password
 decrypt_pdf("input.pdf", "output.pdf", password="mypassword")
+```
+
+### Extract Text
+
+```python
+from pdfghost import extract_text
+
+# Extract text from a PDF and save it as a .txt file
+extract_text("input.pdf", "output.txt", format="txt")
+
+# Extract text from a PDF and save it as a .csv file
+extract_text("input.pdf", "output.csv", format="csv")
+```
+
+### Extract Images
+
+```python
+from pdfghost import extract_images
+
+# Extract all images from a PDF and save them as separate image files
+extract_images("input.pdf", "output_folder")
 ```
 
 ## Testing
