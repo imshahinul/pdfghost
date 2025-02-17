@@ -19,6 +19,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Encrypt/Decrypt PDFs**: Add password protection to PDFs and decrypt them with the correct password.
 - **Extract Text/Images**: Extract text or images from a PDF.
 - **Add Page Numbers**: Insert page numbers at the bottom or top of each page.
+- **Convert PDFs to HTML**: Convert PDFs into structured HTML files.
 
 ## Installation
 
@@ -243,6 +244,14 @@ add_page_numbers("input.pdf", "output.pdf", position="bottom")
 
 # Add page numbers at the top of each page
 add_page_numbers("input.pdf", "output.pdf", position="top")
+```
+
+### Convert PDF to HTML
+```python
+from pdfghost import pdf_to_html
+
+# Convert a PDF into a structured HTML file
+pdf_to_html("input.pdf", "output.html")
 ```
 
 ## Testing
