@@ -332,6 +332,31 @@ from pdfghost import latex_to_pdf
 latex_to_pdf("input.tex", "output.pdf")
 ```
 
+### Compare PDFs
+```python
+from pdfghost import compare_pdfs
+
+# Compare two PDFs and generate a summary of differences
+result = compare_pdfs("file1.pdf", "file2.pdf", output_type="summary")
+print(result)
+
+# Compare two PDFs with side-by-side output
+result = compare_pdfs("file1.pdf", "file2.pdf", output_type="side_by_side")
+print(result)
+
+# Compare two PDFs with highlighted differences
+result = compare_pdfs("file1.pdf", "file2.pdf", output_type="highlight_differences")
+print(result)
+
+# Compare two PDFs with version control-style output
+result = compare_pdfs("file1.pdf", "file2.pdf", output_type="version_control")
+print(result)
+
+# Compare two PDFs with annotations
+result = compare_pdfs("file1.pdf", "file2.pdf", output_type="annotations")
+print(result)
+```
+
 ## Testing
 
 To run unit tests, first install the development dependencies, and then use:
