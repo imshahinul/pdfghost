@@ -22,6 +22,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Convert PDFs to HTML**: Convert PDFs into structured HTML files.
 - **Generate PDFs from Markdown/LaTeX**: Convert Markdown or LaTeX files into well-formatted PDFs.
 - **Compare PDFs**: Identify differences between two PDF files.
+- **PDF Signing**: Add digital signatures to PDFs using cryptographic certificates.
 - **Batch Processing**: Apply operations (merge, split, rotate, etc.) on multiple PDFs at once.
 
 ## Installation
@@ -335,6 +336,7 @@ latex_to_pdf("input.tex", "output.pdf")
 ```
 
 ### Compare PDFs
+
 ```python
 from pdfghost import compare_pdfs
 
@@ -359,7 +361,17 @@ result = compare_pdfs("file1.pdf", "file2.pdf", output_type="annotations")
 print(result)
 ```
 
+### Sign PDFs
+
+```python
+from pdfghost import sign_pdf
+
+# Sign a PDF with a cryptographic certificate
+sign_pdf("input.pdf", "signed.pdf", "certificate.pfx", password="mypassword")
+```
+
 ### Batch Processing
+
 ```python
 from pdfghost import batch_process, rotate_pdf
 
