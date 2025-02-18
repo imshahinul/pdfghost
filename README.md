@@ -21,6 +21,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Add Page Numbers**: Insert page numbers at the bottom or top of each page.
 - **Convert PDFs to HTML**: Convert PDFs into structured HTML files.
 - **Generate PDFs from Markdown/LaTeX**: Convert Markdown or LaTeX files into well-formatted PDFs.
+- **Compare PDFs**: Identify differences between two PDF files.
 
 ## Installation
 
