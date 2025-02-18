@@ -22,6 +22,7 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 - **Convert PDFs to HTML**: Convert PDFs into structured HTML files.
 - **Generate PDFs from Markdown/LaTeX**: Convert Markdown or LaTeX files into well-formatted PDFs.
 - **Compare PDFs**: Identify differences between two PDF files.
+- **Batch Processing**: Apply operations (merge, split, rotate, etc.) on multiple PDFs at once.
 
 ## Installation
 
@@ -356,6 +357,14 @@ print(result)
 # Compare two PDFs with annotations
 result = compare_pdfs("file1.pdf", "file2.pdf", output_type="annotations")
 print(result)
+```
+
+### Batch Processing
+```python
+from pdfghost import batch_process, rotate_pdf
+
+# Rotate all PDFs in a folder by 90 degrees
+batch_process("input_folder", "output_folder", rotate_pdf, rotation=90)
 ```
 
 ## Testing
