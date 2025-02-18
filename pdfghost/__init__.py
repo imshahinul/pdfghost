@@ -13,6 +13,7 @@ from .functions.page_number import add_page_numbers
 from .functions.convert.html import pdf_to_html
 from .functions.convert.rtf import markdown_to_pdf, latex_to_pdf
 from .functions.pdf_compare import compare_pdfs
+from .functions.batch_process import batch_process
 
 __all__ = [
     "merge_pdfs",
@@ -39,4 +40,5 @@ __all__ = [
     "markdown_to_pdf",
     "latex_to_pdf",
     "compare_pdfs",
+    "batch_process",
 ]
