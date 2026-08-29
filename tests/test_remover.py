@@ -1,7 +1,7 @@
 # tests/test_remover.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.remover import (
     remove_pages,
     remove_pages_from_start,

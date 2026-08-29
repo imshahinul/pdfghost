@@ -1,6 +1,6 @@
 # pdfghost/functions/rearranger.py
 import os
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 from .merger import merge_pdfs
 from ..utils.path_validator import validate_file_path
 

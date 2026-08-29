@@ -1,7 +1,7 @@
 # tests/test_rotate.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.rotate import rotate_pdf
 
 

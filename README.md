@@ -29,12 +29,12 @@ numbers, batch processing, and comparing PDFs. It also supports generating PDFs 
 
 ### Python Requirements
 
-- Python 3.7+
+- Python 3.11-3.14
 
 ### Install via pip
 
 ```bash
-pip install pdfghost
+pip install pdf-ghost
 ```
 
 ---

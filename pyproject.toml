@@ -1,3 +1,42 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdf-ghost"
+version = "0.2.0"
+description = "Utilities for common PDF file operations and conversions."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "S M Shahinul Islam", email = "s.m.shahinul.islam@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pypdf[crypto]>=6.16.2,<7",
+    "reportlab>=5.0.1,<6",
+    "PyMuPDF>=1.28.2,<2",
+    "Pillow>=12.3.0,<13",
+    "pdfplumber>=0.11.10,<0.12",
+    "termcolor>=3.3.0,<4",
+]
+
+[project.urls]
+Homepage = "https://github.com/imshahinul/pdfghost"
+Repository = "https://github.com/imshahinul/pdfghost"
+Issues = "https://github.com/imshahinul/pdfghost/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pdfghost*"]
+exclude = ["tests*"]
+namespaces = true

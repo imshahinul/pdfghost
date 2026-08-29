@@ -1,5 +1,5 @@
 # pdfghost/functions/inserter.py
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 from ..utils.path_validator import validate_file_path
 
 def insert_pages(input_path, output_path, insertions):

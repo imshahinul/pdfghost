@@ -1,5 +1,5 @@
 # pdfghost/functions/splitter.py
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 from ..utils.path_validator import validate_file_path, validate_directory_path
 
 def split_pdf(input_path, output_folder, split_range=None):

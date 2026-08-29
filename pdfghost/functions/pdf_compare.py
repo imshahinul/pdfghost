@@ -1,5 +1,5 @@
 # pdfghost/functions/pdf_compare.py
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from termcolor import colored
 from ..utils.path_validator import validate_file_path
 

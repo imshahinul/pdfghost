@@ -1,7 +1,7 @@
 # tests/test_image_convert.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from PIL import Image
 from pdfghost.functions.convert.image import pdf_to_images, images_to_pdf
 

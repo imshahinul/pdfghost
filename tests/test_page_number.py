@@ -1,7 +1,7 @@
 # tests/test_page_number.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.page_number import add_page_numbers
 
 

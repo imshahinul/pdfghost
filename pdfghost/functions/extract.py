@@ -1,7 +1,7 @@
 # pdfghost/functions/extract.py
 import os
 import csv
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from ..utils.path_validator import validate_file_path, validate_directory_path
 
 

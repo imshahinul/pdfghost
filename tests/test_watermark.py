@@ -1,7 +1,7 @@
 # tests/test_watermark.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from PIL import Image
 from pdfghost.functions.watermark import (
     add_text_watermark,

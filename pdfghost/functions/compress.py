@@ -1,5 +1,5 @@
 # pdfghost/functions/compress.py
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 from ..utils.path_validator import validate_file_path
 
 
@@ -26,7 +26,8 @@ def compress_pdf(input_path, output_path, power=3):
 
     # Set compression options
     writer.add_metadata(reader.metadata)  # Preserve metadata
-    writer.compress_content_streams = True  # Enable content stream compression
+    for page in writer.pages:
+        page.compress_content_streams()
 
     # Save the compressed PDF
     with open(output_path, "wb") as output_pdf:

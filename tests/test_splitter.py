@@ -1,7 +1,7 @@
 # tests/test_splitter.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.splitter import split_pdf
 
 class TestSplitter(unittest.TestCase):
