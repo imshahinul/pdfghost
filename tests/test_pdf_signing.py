@@ -1,7 +1,7 @@
 # tests/test_pdf_signature.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.pdf_signature import sign_pdf
 
 

@@ -1,5 +1,5 @@
 # pdfghost/functions/merger.py
-from PyPDF2 import PdfMerger
+from pypdf import PdfWriter
 from ..utils.path_validator import validate_file_path
 
 
@@ -15,10 +15,10 @@ def merge_pdfs(output_path, *input_paths):
     for path in input_paths:
         validate_file_path(path)
 
-    merger = PdfMerger()
+    writer = PdfWriter()
 
     for path in input_paths:
-        merger.append(path)
+        writer.append(path)
 
-    merger.write(output_path)
-    merger.close()
+    writer.write(output_path)
+    writer.close()

@@ -1,7 +1,7 @@
 # tests/test_encryption.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.encryption import encrypt_pdf, decrypt_pdf
 
 

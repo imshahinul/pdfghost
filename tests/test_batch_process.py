@@ -1,7 +1,7 @@
 # tests/test_batch_process.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.batch_process import batch_process
 from pdfghost.functions.rotate import rotate_pdf
 

@@ -1,7 +1,7 @@
 # tests/test_merger.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.merger import merge_pdfs
 
 

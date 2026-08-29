@@ -1,7 +1,7 @@
 # tests/test_rearranger.py
 import os
 import unittest
-from PyPDF2 import PdfWriter
+from pypdf import PdfWriter
 from pdfghost.functions.rearranger import rearrange_pdf, merge_and_rearrange
 
 class TestRearranger(unittest.TestCase):

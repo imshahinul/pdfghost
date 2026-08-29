@@ -1,7 +1,7 @@
 # pdfghost/functions/pdf_signature.py
-from PyPDF2 import PdfReader, PdfWriter
-from PyPDF2.generic import NameObject
-from PyPDF2.generic import create_string_object
+from pypdf import PdfReader, PdfWriter
+from pypdf.generic import NameObject
+from pypdf.generic import create_string_object
 from ..utils.path_validator import validate_file_path
 
 def sign_pdf(input_path: str, output_path: str, certificate_path: str, password: str = None):
