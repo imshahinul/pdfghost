@@ -1,7 +1,5 @@
 # pdfghost/functions/rearranger.py
-import os
 from pypdf import PdfReader, PdfWriter
-from .merger import merge_pdfs
 from ..utils.path_validator import validate_file_path
 
 def rearrange_pdf(input_path, output_path, page_order):
@@ -42,16 +40,24 @@ def merge_and_rearrange(output_path, page_order, *input_paths):
                       - page_index: Page index (0-based) in the specified input PDF.
     :param input_paths: Paths of the PDFs to merge.
     :raises FileNotFoundError: If any input file does not exist.
-    :raises IndexError: If any page index in `page_order` is out of range.
+    :raises IndexError: If any input or page index in `page_order` is out of range.
     """
-    # Merge the input PDFs into a single temporary PDF
-    temp_path = "temp_merged.pdf"
-    merge_pdfs(temp_path, *input_paths)
+    readers = []
+    for input_path in input_paths:
+        validate_file_path(input_path)
+        readers.append(PdfReader(input_path))
 
-    # Rearrange the pages in the merged PDF
-    try:
-        rearrange_pdf(temp_path, output_path, [i for _, i in page_order])
-    finally:
-        # Clean up the temporary file
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+    for input_index, page_index in page_order:
+        if input_index < 0 or input_index >= len(readers):
+            raise IndexError(f"Input index {input_index} is out of range.")
+        if page_index < 0 or page_index >= len(readers[input_index].pages):
+            raise IndexError(
+                f"Page index {page_index} is out of range for input {input_index}."
+            )
+
+    writer = PdfWriter()
+    for input_index, page_index in page_order:
+        writer.add_page(readers[input_index].pages[page_index])
+
+    with open(output_path, "wb") as output_pdf:
+        writer.write(output_pdf)
