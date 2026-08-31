@@ -1,5 +1,6 @@
 # tests/test_image_convert.py
 import os
+import sys
 import unittest
 from pathlib import Path
 
@@ -10,6 +11,12 @@ from pdfghost.functions.convert.image import pdf_to_images, images_to_pdf
 
 
 class TestImageConvert(unittest.TestCase):
+    def test_converter_uses_canonical_pymupdf_module(self):
+        import pdfghost.functions.convert.image as image_module
+
+        self.assertEqual(image_module.pymupdf.__name__, "pymupdf")
+        self.assertNotIn("fitz", sys.modules)
+
     def setUp(self):
         # Create a valid PDF file for testing
         self.input_pdf = "test.pdf"
