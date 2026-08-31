@@ -1,7 +1,7 @@
 # pdfghost/functions/convert/image.py
 import os
 import tempfile
-import fitz  # PyMuPDF
+import pymupdf
 from PIL import Image
 from ...utils.path_validator import validate_file_path, validate_directory_path
 
@@ -24,12 +24,12 @@ def pdf_to_images(input_path, output_folder, format="png", zoom=2):
         raise ValueError("Output format must be 'png', 'jpg', or 'jpeg'.")
 
     # Open the PDF file
-    pdf_document = fitz.open(input_path)
+    pdf_document = pymupdf.open(input_path)
 
     # Convert each page to an image
     for page_number in range(len(pdf_document)):
         page = pdf_document.load_page(page_number)
-        mat = fitz.Matrix(zoom, zoom)  # Zoom factor for higher resolution
+        mat = pymupdf.Matrix(zoom, zoom)  # Zoom factor for higher resolution
         pix = page.get_pixmap(matrix=mat)
         image_path = os.path.join(output_folder, f"page_{page_number + 1}.{format}")
         pix.save(image_path)
