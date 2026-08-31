@@ -1,6 +1,7 @@
 # pdfghost/functions/extract.py
 import os
 import csv
+import tempfile
 from pypdf import PdfReader
 from ..utils.path_validator import validate_file_path, validate_directory_path
 
@@ -15,28 +16,39 @@ def extract_text(input_path, output_path, format="txt"):
     :raises FileNotFoundError: If the input file does not exist.
     :raises ValueError: If the output format is invalid.
     """
-    validate_file_path(input_path)
-
-    if format.lower() not in ["txt", "csv"]:
+    if not isinstance(format, str):
+        raise TypeError("format must be a string")
+    normalized_format = format.lower()
+    if normalized_format not in ["txt", "csv"]:
         raise ValueError("Output format must be 'txt' or 'csv'.")
 
+    validate_file_path(input_path)
     reader = PdfReader(input_path)
-    text = ""
+    text = "".join(page.extract_text() or "" for page in reader.pages)
 
-    # Extract text from all pages
-    for page in reader.pages:
-        text += page.extract_text()
-
-    # Save the extracted text
-    if format.lower() == "txt":
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(text)
-    elif format.lower() == "csv":
-        with open(output_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow(["Text"])
-            for line in text.splitlines():
-                writer.writerow([line])
+    output_directory = os.path.dirname(os.fspath(output_path)) or "."
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            dir=output_directory,
+            encoding="utf-8",
+            newline="",
+            delete=False,
+        ) as output_file:
+            temporary_path = output_file.name
+            if normalized_format == "txt":
+                output_file.write(text)
+            else:
+                writer = csv.writer(output_file)
+                writer.writerow(["Text"])
+                for line in text.splitlines():
+                    writer.writerow([line])
+        os.replace(temporary_path, output_path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None and os.path.exists(temporary_path):
+            os.remove(temporary_path)
 
 
 def extract_images(input_path, output_folder):
