@@ -1,6 +1,8 @@
 # tests/test_pdf_signature.py
 import os
 import unittest
+import warnings
+from pathlib import Path
 from pypdf import PdfWriter
 from pdfghost.functions.pdf_signature import sign_pdf
 
@@ -23,9 +25,11 @@ class TestPdfSignature(unittest.TestCase):
             f.write(b"dummy certificate data")
 
     def test_sign_pdf(self):
-        # Test signing a PDF with a certificate
-        sign_pdf(self.input_pdf, self.output_pdf, self.certificate_path)
-        self.assertTrue(os.path.exists(self.output_pdf))
+        Path(self.output_pdf).write_bytes(b"sentinel")
+        with self.assertWarns(DeprecationWarning):
+            with self.assertRaisesRegex(NotImplementedError, "cryptographic"):
+                sign_pdf(self.input_pdf, self.output_pdf, self.certificate_path)
+        self.assertEqual(Path(self.output_pdf).read_bytes(), b"sentinel")
 
     def test_sign_pdf_with_invalid_input(self):
         # Test signing with a non-existent PDF file
@@ -36,6 +40,17 @@ class TestPdfSignature(unittest.TestCase):
         # Test signing with a non-existent certificate file
         with self.assertRaises(FileNotFoundError):
             sign_pdf(self.input_pdf, self.output_pdf, "nonexistent.pfx")
+
+    def test_password_remains_accepted_but_cannot_stamp_fake_signature(self):
+        with self.assertWarns(DeprecationWarning):
+            with self.assertRaises(NotImplementedError):
+                sign_pdf(
+                    self.input_pdf,
+                    self.output_pdf,
+                    self.certificate_path,
+                    password="secret",
+                )
+        self.assertFalse(Path(self.output_pdf).exists())
 
     def tearDown(self):
         # Clean up created files

@@ -2,6 +2,7 @@
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from io import BytesIO
+import warnings
 from ..utils.path_validator import validate_file_path
 
 
@@ -119,23 +120,22 @@ def remove_watermark(input_path, output_path, pages_to_clean=None):
     :raises FileNotFoundError: If the input file does not exist.
     """
     validate_file_path(input_path)
+    if pages_to_clean is not None:
+        if not isinstance(pages_to_clean, _PAGE_SELECTION_TYPES):
+            raise TypeError(
+                "pages_to_clean must be None or a list, tuple, set, or frozenset"
+            )
+        for page_index in pages_to_clean:
+            if isinstance(page_index, bool) or not isinstance(page_index, int):
+                raise TypeError("page indices must be integers excluding bool")
 
-    reader = PdfReader(input_path)
-    writer = PdfWriter()
-
-    for i in range(len(reader.pages)):
-        page = reader.pages[i]
-        if pages_to_clean is None or i in pages_to_clean:
-            # Create a new page without the watermark
-            new_page = PdfWriter()
-            new_page.add_page(page)
-            with BytesIO() as temp_pdf:
-                new_page.write(temp_pdf)
-                temp_pdf.seek(0)
-                new_reader = PdfReader(temp_pdf)
-                writer.add_page(new_reader.pages[0])
-        else:
-            writer.add_page(page)
-
-    with open(output_path, "wb") as output_pdf:
-        writer.write(output_pdf)
+    warnings.warn(
+        "remove_watermark is deprecated because reliable removal of arbitrary "
+        "or merged watermark content is unavailable.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    raise NotImplementedError(
+        "reliable removal of arbitrary or merged watermark content is unavailable; "
+        "no output was created."
+    )

@@ -148,14 +148,24 @@ class TestWatermark(unittest.TestCase):
                 self.assertEqual(Path(self.output_path).read_bytes(), b"sentinel")
 
     def test_remove_watermark(self):
-        # Test removing watermarks from all pages
-        remove_watermark(self.input_path, self.output_path)
-        self.assertTrue(os.path.exists(self.output_path))
+        Path(self.output_path).write_bytes(b"sentinel")
+        with self.assertWarns(DeprecationWarning):
+            with self.assertRaisesRegex(NotImplementedError, "reliable"):
+                remove_watermark(self.input_path, self.output_path)
+        self.assertEqual(Path(self.output_path).read_bytes(), b"sentinel")
 
     def test_remove_watermark_from_specific_pages(self):
-        # Test removing watermarks from specific pages
-        remove_watermark(self.input_path, self.output_path, pages_to_clean=[0])
-        self.assertTrue(os.path.exists(self.output_path))
+        with self.assertWarns(DeprecationWarning):
+            with self.assertRaises(NotImplementedError):
+                remove_watermark(self.input_path, self.output_path, pages_to_clean=[0])
+
+    def test_remove_watermark_rejects_unsafe_page_selection_types(self):
+        for pages in (0, "0", [True], [0.0]):
+            with self.subTest(pages=pages):
+                Path(self.output_path).write_bytes(b"sentinel")
+                with self.assertRaises(TypeError):
+                    remove_watermark(self.input_path, self.output_path, pages)
+                self.assertEqual(Path(self.output_path).read_bytes(), b"sentinel")
 
     def tearDown(self):
         # Clean up created files
