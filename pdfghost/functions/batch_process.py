@@ -17,14 +17,27 @@ def batch_process(input_folder: str, output_folder: str, operation: Callable, **
     :param kwargs: Additional arguments to pass to the operation function.
     :raises FileNotFoundError: If the input folder does not exist.
     """
-    validate_existing_directory_path(input_folder)
-    validate_directory_path(output_folder)
+    if not callable(operation):
+        raise TypeError("operation must be callable")
 
-    # Get all PDF files in the input folder
-    pdf_files = [f for f in os.listdir(input_folder) if f.lower().endswith(".pdf")]
+    validate_existing_directory_path(input_folder)
+    if os.path.realpath(input_folder) == os.path.realpath(output_folder):
+        raise ValueError("input_folder and output_folder must be different")
+
+    pdf_files = sorted(
+        (
+            file_name
+            for file_name in os.listdir(input_folder)
+            if file_name.lower().endswith(".pdf")
+            and os.path.isfile(os.path.join(input_folder, file_name))
+        ),
+        key=lambda file_name: (file_name.casefold(), file_name),
+    )
 
     if not pdf_files:
         raise FileNotFoundError("No PDF files found in the input folder.")
+
+    validate_directory_path(output_folder)
 
     # Apply the operation to each PDF
     for pdf_file in pdf_files:
