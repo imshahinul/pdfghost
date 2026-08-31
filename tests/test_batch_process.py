@@ -92,6 +92,47 @@ class TestBatchProcess(unittest.TestCase):
 
         os.rmdir(empty_folder)
 
+    def test_no_pdfs_does_not_create_missing_output_folder(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            empty = root / "empty"
+            output = root / "output"
+            empty.mkdir()
+            with self.assertRaises(FileNotFoundError):
+                batch_process(empty, output, rotate_pdf, rotation=90)
+            self.assertFalse(output.exists())
+
+    def test_operation_must_be_callable_before_output_creation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "output"
+            with self.assertRaises(TypeError):
+                batch_process(self.input_folder, output, None)
+            self.assertFalse(output.exists())
+
+    def test_rejects_same_input_and_output_directory(self):
+        with self.assertRaises(ValueError):
+            batch_process(self.input_folder, self.input_folder, rotate_pdf, rotation=90)
+
+    def test_processes_regular_pdfs_in_deterministic_order_with_kwargs(self):
+        Path(self.input_folder, "A.PDF").write_bytes(b"pdf")
+        Path(self.input_folder, "directory.pdf").mkdir()
+        calls = []
+
+        def operation(input_path, output_path, **kwargs):
+            calls.append((Path(input_path).name, Path(output_path).name, kwargs))
+
+        batch_process(self.input_folder, self.output_folder, operation, marker=7)
+        self.assertEqual(
+            calls,
+            [
+                ("A.PDF", "A.PDF", {"marker": 7}),
+                ("file1.pdf", "file1.pdf", {"marker": 7}),
+                ("file2.pdf", "file2.pdf", {"marker": 7}),
+            ],
+        )
+        Path(self.input_folder, "A.PDF").unlink()
+        Path(self.input_folder, "directory.pdf").rmdir()
+
     def tearDown(self):
         for pdf_file in self.pdf_files:
             input_path = os.path.join(self.input_folder, pdf_file)
