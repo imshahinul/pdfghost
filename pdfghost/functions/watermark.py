@@ -1,9 +1,56 @@
 # pdfghost/functions/watermark.py
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from io import BytesIO
 from ..utils.path_validator import validate_file_path
+
+
+_PAGE_SELECTION_TYPES = (list, tuple, set, frozenset)
+
+
+def _validate_pages_to_watermark(pages_to_watermark, page_count):
+    if pages_to_watermark is None:
+        return None
+    if not isinstance(pages_to_watermark, _PAGE_SELECTION_TYPES):
+        raise TypeError(
+            "pages_to_watermark must be None or a list, tuple, set, or frozenset"
+        )
+
+    pages = set()
+    for page_index in pages_to_watermark:
+        if isinstance(page_index, bool) or not isinstance(page_index, int):
+            raise TypeError("page indices must be integers excluding bool")
+        if page_index < 0 or page_index >= page_count:
+            raise ValueError("page index out of range")
+        pages.add(page_index)
+    return pages
+
+
+def _text_watermark_page(width, height, text):
+    packet = BytesIO()
+    watermark = canvas.Canvas(packet, pagesize=(width, height))
+    watermark.setFont("Helvetica", 60)
+    watermark.setFillColorRGB(0.5, 0.5, 0.5, alpha=0.5)
+    watermark.drawCentredString(width / 2, height / 2, text)
+    watermark.save()
+    packet.seek(0)
+    return PdfReader(packet).pages[0]
+
+
+def _image_watermark_page(width, height, image_path):
+    packet = BytesIO()
+    watermark = canvas.Canvas(packet, pagesize=(width, height))
+    watermark.drawImage(
+        image_path,
+        (width - 200) / 2,
+        (height - 100) / 2,
+        width=200,
+        height=100,
+        mask="auto",
+    )
+    watermark.save()
+    packet.seek(0)
+    return PdfReader(packet).pages[0]
 
 def add_text_watermark(input_path, output_path, text, pages_to_watermark=None):
     """
@@ -15,28 +62,21 @@ def add_text_watermark(input_path, output_path, text, pages_to_watermark=None):
     :param pages_to_watermark: List of page indices (0-based) to watermark. If None, watermark all pages.
     :raises FileNotFoundError: If the input file does not exist.
     """
+    if not isinstance(text, str):
+        raise TypeError("text must be a string")
     validate_file_path(input_path)
 
     reader = PdfReader(input_path)
-    writer = PdfWriter()
+    selected_pages = _validate_pages_to_watermark(
+        pages_to_watermark, len(reader.pages)
+    )
+    writer = PdfWriter(clone_from=reader)
 
-    # Create a watermark PDF
-    watermark_pdf = BytesIO()
-    c = canvas.Canvas(watermark_pdf, pagesize=letter)
-    c.setFont("Helvetica", 60)
-    c.setFillColorRGB(0.5, 0.5, 0.5, alpha=0.5)  # Light gray with transparency
-    c.drawString(100, 100, text)  # Position the watermark
-    c.save()
-
-    # Apply the watermark to the specified pages
-    watermark_reader = PdfReader(watermark_pdf)
-    watermark_page = watermark_reader.pages[0]
-
-    for i in range(len(reader.pages)):
-        page = reader.pages[i]
-        if pages_to_watermark is None or i in pages_to_watermark:
-            page.merge_page(watermark_page)
-        writer.add_page(page)
+    for index, page in enumerate(writer.pages):
+        if selected_pages is None or index in selected_pages:
+            width = float(page.mediabox.width)
+            height = float(page.mediabox.height)
+            page.merge_page(_text_watermark_page(width, height, text))
 
     with open(output_path, "wb") as output_pdf:
         writer.write(output_pdf)
@@ -51,27 +91,20 @@ def add_image_watermark(input_path, output_path, image_path, pages_to_watermark=
     :param pages_to_watermark: List of page indices (0-based) to watermark. If None, watermark all pages.
     :raises FileNotFoundError: If the input file or image does not exist.
     """
-    validate_file_path(input_path)
     validate_file_path(image_path)
+    validate_file_path(input_path)
 
     reader = PdfReader(input_path)
-    writer = PdfWriter()
+    selected_pages = _validate_pages_to_watermark(
+        pages_to_watermark, len(reader.pages)
+    )
+    writer = PdfWriter(clone_from=reader)
 
-    # Create a watermark PDF
-    watermark_pdf = BytesIO()
-    c = canvas.Canvas(watermark_pdf, pagesize=letter)
-    c.drawImage(image_path, 100, 100, width=200, height=100, mask="auto")  # Position and size the watermark
-    c.save()
-
-    # Apply the watermark to the specified pages
-    watermark_reader = PdfReader(watermark_pdf)
-    watermark_page = watermark_reader.pages[0]
-
-    for i in range(len(reader.pages)):
-        page = reader.pages[i]
-        if pages_to_watermark is None or i in pages_to_watermark:
-            page.merge_page(watermark_page)
-        writer.add_page(page)
+    for index, page in enumerate(writer.pages):
+        if selected_pages is None or index in selected_pages:
+            width = float(page.mediabox.width)
+            height = float(page.mediabox.height)
+            page.merge_page(_image_watermark_page(width, height, image_path))
 
     with open(output_path, "wb") as output_pdf:
         writer.write(output_pdf)
