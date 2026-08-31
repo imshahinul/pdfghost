@@ -1,4 +1,6 @@
 # pdfghost/functions/pdf_compare.py
+from itertools import zip_longest
+
 from pypdf import PdfReader
 from termcolor import colored
 from ..utils.path_validator import validate_file_path
@@ -14,38 +16,44 @@ def compare_pdfs(file1: str, file2: str, output_type: str = "summary"):
     :raises FileNotFoundError: If either input file does not exist.
     :return: A string containing the comparison result.
     """
+    valid_output_types = {
+        "summary",
+        "side_by_side",
+        "highlight_differences",
+        "version_control",
+        "annotations",
+    }
+    if not isinstance(output_type, str):
+        raise TypeError("output_type must be a string")
+    output_type = output_type.lower()
+    if output_type not in valid_output_types:
+        raise ValueError(f"output_type must be one of {sorted(valid_output_types)}")
+
     validate_file_path(file1)
     validate_file_path(file2)
 
     def read_pdf(file):
         """Extract text from a PDF file."""
         reader = PdfReader(file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text() + "\n"
-        return text
+        return "".join((page.extract_text() or "") + "\n" for page in reader.pages)
+
+    def compared_lines(text1, text2):
+        return enumerate(
+            zip_longest(text1.splitlines(), text2.splitlines(), fillvalue=""),
+            1,
+        )
 
     def side_by_side_comparison(text1, text2):
         """Generate a side-by-side comparison of two texts."""
-        text1_lines = text1.splitlines()
-        text2_lines = text2.splitlines()
-        max_lines = max(len(text1_lines), len(text2_lines))
         output = ""
-        for i in range(max_lines):
-            line1 = text1_lines[i] if i < len(text1_lines) else ""
-            line2 = text2_lines[i] if i < len(text2_lines) else ""
+        for _, (line1, line2) in compared_lines(text1, text2):
             output += f"{line1:<60} | {line2:<60}\n"
         return output
 
     def highlight_differences(text1, text2):
         """Highlight differences between two texts."""
-        text1_lines = text1.splitlines()
-        text2_lines = text2.splitlines()
-        max_lines = max(len(text1_lines), len(text2_lines))
         output = ""
-        for i in range(max_lines):
-            line1 = text1_lines[i] if i < len(text1_lines) else ""
-            line2 = text2_lines[i] if i < len(text2_lines) else ""
+        for _, (line1, line2) in compared_lines(text1, text2):
             if line1 != line2:
                 output += f"{colored(line1, 'red')} | {colored(line2, 'green')}\n"
             else:
@@ -55,31 +63,26 @@ def compare_pdfs(file1: str, file2: str, output_type: str = "summary"):
     def summary_section(text1, text2):
         """Generate a summary of differences between two texts."""
         summary = "Summary of Differences:\n"
-        text1_lines = text1.splitlines()
-        text2_lines = text2.splitlines()
-        for i in range(min(len(text1_lines), len(text2_lines))):
-            if text1_lines[i] != text2_lines[i]:
-                summary += f"- Line {i + 1}: File 1: {text1_lines[i]}, File 2: {text2_lines[i]}\n"
+        for line_number, (line1, line2) in compared_lines(text1, text2):
+            if line1 != line2:
+                summary += f"- Line {line_number}: File 1: {line1}, File 2: {line2}\n"
         return summary
 
     def version_control(text1, text2):
         """Generate a version control-style comparison of two texts."""
         changes = "Changes:\n"
-        text1_lines = text1.splitlines()
-        text2_lines = text2.splitlines()
-        for i in range(min(len(text1_lines), len(text2_lines))):
-            if text1_lines[i] != text2_lines[i]:
-                changes += f"  - Line {i + 1}: {text1_lines[i]} -> {text2_lines[i]}\n"
+        for line_number, (line1, line2) in compared_lines(text1, text2):
+            if line1 != line2:
+                changes += f"  - Line {line_number}: {line1}\n"
+                changes += f"  + Line {line_number}: {line2}\n"
         return changes
 
     def annotations(text1, text2):
         """Generate annotations for differences between two texts."""
         annotations = "Annotations:\n"
-        text1_lines = text1.splitlines()
-        text2_lines = text2.splitlines()
-        for i in range(min(len(text1_lines), len(text2_lines))):
-            if text1_lines[i] != text2_lines[i]:
-                annotations += f"  * Note: Line {i + 1} differs\n"
+        for line_number, (line1, line2) in compared_lines(text1, text2):
+            if line1 != line2:
+                annotations += f"  * Note: Line {line_number} differs\n"
         return annotations
 
     # Extract text from both PDFs
@@ -97,7 +100,5 @@ def compare_pdfs(file1: str, file2: str, output_type: str = "summary"):
         result = version_control(text1, text2)
     elif output_type == "annotations":
         result = annotations(text1, text2)
-    else:
-        result = summary_section(text1, text2)
 
     return result
