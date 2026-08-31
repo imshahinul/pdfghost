@@ -1,7 +1,9 @@
 # pdfghost/functions/page_number.py
+import math
+
 from pypdf import PdfReader, PdfWriter
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from io import BytesIO
 from ..utils.path_validator import validate_file_path
 
@@ -17,27 +19,38 @@ def add_page_numbers(input_path, output_path, position="bottom", font_size=12):
     :raises FileNotFoundError: If the input file does not exist.
     :raises ValueError: If the position is invalid.
     """
+    if not isinstance(position, str):
+        raise TypeError("position must be a string")
+    normalized_position = position.lower()
+    if normalized_position not in ["top", "bottom"]:
+        raise ValueError("Position must be 'top' or 'bottom'.")
+    if isinstance(font_size, bool) or not isinstance(font_size, (int, float)):
+        raise TypeError("font_size must be an int or float excluding bool")
+    if not math.isfinite(font_size) or font_size <= 0:
+        raise ValueError("font_size must be positive and finite")
+
     validate_file_path(input_path)
 
-    if position.lower() not in ["top", "bottom"]:
-        raise ValueError("Position must be 'top' or 'bottom'.")
-
     reader = PdfReader(input_path)
-    writer = PdfWriter()
+    writer = PdfWriter(clone_from=reader)
 
-    for i, page in enumerate(reader.pages):
+    for i, page in enumerate(writer.pages):
         # Create a PDF with the page number
         packet = BytesIO()
-        can = canvas.Canvas(packet, pagesize=letter)
+        width = float(page.mediabox.width)
+        height = float(page.mediabox.height)
+        can = canvas.Canvas(packet, pagesize=(width, height))
         can.setFont("Helvetica", font_size)
 
         # Calculate the position for the page number
-        if position.lower() == "top":
-            y = 750  # Near the top of the page
+        if normalized_position == "top":
+            y = height - font_size
         else:
-            y = 50  # Near the bottom of the page
+            y = font_size
 
-        can.drawString(300, y, f"Page {i + 1}")  # Center the page number
+        label = f"Page {i + 1}"
+        x = (width - stringWidth(label, "Helvetica", font_size)) / 2
+        can.drawString(x, y, label)
         can.save()
 
         # Merge the page number with the original page
@@ -45,7 +58,6 @@ def add_page_numbers(input_path, output_path, position="bottom", font_size=12):
         number_pdf = PdfReader(packet)
         number_page = number_pdf.pages[0]
         page.merge_page(number_page)
-        writer.add_page(page)
 
     # Save the PDF with page numbers
     with open(output_path, "wb") as output_pdf:
