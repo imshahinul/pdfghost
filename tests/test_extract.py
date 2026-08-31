@@ -1,6 +1,9 @@
 # tests/test_extract.py
 import os
 import unittest
+from pathlib import Path
+from unittest.mock import patch
+
 from pypdf import PdfWriter
 from pdfghost.functions.extract import extract_text, extract_images
 
@@ -33,6 +36,32 @@ class TestExtract(unittest.TestCase):
         # Test extracting text with an invalid format
         with self.assertRaises(ValueError):
             extract_text(self.input_pdf, self.output_txt, format="pdf")
+
+    def test_extract_text_validates_format_before_pdf_and_output(self):
+        Path(self.input_pdf).write_bytes(b"not a pdf")
+        for format_value, exception in ((None, TypeError), (1, TypeError), ("pdf", ValueError)):
+            with self.subTest(format=format_value):
+                Path(self.output_txt).write_bytes(b"sentinel")
+                with self.assertRaises(exception):
+                    extract_text(self.input_pdf, self.output_txt, format_value)
+                self.assertEqual(Path(self.output_txt).read_bytes(), b"sentinel")
+
+    def test_extract_text_handles_pages_without_extractable_text(self):
+        page_with_none = unittest.mock.Mock()
+        page_with_none.extract_text.return_value = None
+        page_with_text = unittest.mock.Mock()
+        page_with_text.extract_text.return_value = "alpha\nbeta\n"
+        with patch("pdfghost.functions.extract.PdfReader") as reader:
+            reader.return_value.pages = [page_with_none, page_with_text]
+            self.assertIsNone(extract_text(self.input_pdf, self.output_txt, "TXT"))
+        self.assertEqual(Path(self.output_txt).read_text(), "alpha\nbeta\n")
+
+        with patch("pdfghost.functions.extract.PdfReader") as reader:
+            reader.return_value.pages = [page_with_none, page_with_text]
+            extract_text(self.input_pdf, self.output_csv, "CsV")
+        self.assertEqual(
+            Path(self.output_csv).read_text(), "Text\nalpha\nbeta\n"
+        )
 
     def test_extract_images(self):
         # Test extracting images from a PDF

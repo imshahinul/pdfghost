@@ -1,4 +1,8 @@
 # pdfghost/functions/convert/html.py
+import html
+import os
+import tempfile
+
 import pdfplumber
 from ...utils.path_validator import validate_file_path
 
@@ -13,12 +17,32 @@ def pdf_to_html(input_path: str, output_path: str):
     """
     validate_file_path(input_path)
 
-    # Extract text and structure from the PDF
+    sections = []
     with pdfplumber.open(input_path) as pdf:
-        html_content = ""
-        for page in pdf.pages:
-            html_content += page.extract_text() + "<br>"
+        for page_number, page in enumerate(pdf.pages, 1):
+            page_text = html.escape(page.extract_text() or "").replace("\n", "<br>\n")
+            sections.append(
+                f'<section data-page="{page_number}">{page_text}</section>'
+            )
 
-    # Save the HTML content to the output file
-    with open(output_path, "w", encoding="utf-8") as html_file:
-        html_file.write(html_content)
+    html_content = (
+        "<!DOCTYPE html>\n"
+        '<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        "<title>PDF conversion</title>\n</head>\n<body>\n"
+        + "\n".join(sections)
+        + "\n</body>\n</html>\n"
+    )
+
+    output_directory = os.path.dirname(os.fspath(output_path)) or "."
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", dir=output_directory, encoding="utf-8", delete=False
+        ) as html_file:
+            temporary_path = html_file.name
+            html_file.write(html_content)
+        os.replace(temporary_path, output_path)
+        temporary_path = None
+    finally:
+        if temporary_path is not None and os.path.exists(temporary_path):
+            os.remove(temporary_path)

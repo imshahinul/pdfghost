@@ -1,5 +1,6 @@
 # pdfghost/functions/convert/image.py
 import os
+import tempfile
 import fitz  # PyMuPDF
 from PIL import Image
 from ...utils.path_validator import validate_file_path, validate_directory_path
@@ -42,10 +43,36 @@ def images_to_pdf(output_path, *image_paths):
     :param image_paths: Paths of the image files to convert.
     :raises FileNotFoundError: If any input image file does not exist.
     """
-    images = []
+    if not image_paths:
+        raise ValueError("At least one image path is required.")
+
     for path in image_paths:
         validate_file_path(path)
-        images.append(Image.open(path))
 
-    # Save images as a single PDF
-    images[0].save(output_path, save_all=True, append_images=images[1:], format="PDF")
+    images = []
+    temporary_path = None
+    try:
+        for path in image_paths:
+            with Image.open(path) as image:
+                image.load()
+                images.append(image.convert("RGB"))
+
+        output_directory = os.path.dirname(os.fspath(output_path)) or "."
+        with tempfile.NamedTemporaryFile(
+            dir=output_directory, suffix=".pdf", delete=False
+        ) as temporary_file:
+            temporary_path = temporary_file.name
+        images[0].save(
+            temporary_path,
+            save_all=True,
+            append_images=images[1:],
+            format="PDF",
+            resolution=72.0,
+        )
+        os.replace(temporary_path, output_path)
+        temporary_path = None
+    finally:
+        for image in images:
+            image.close()
+        if temporary_path is not None and os.path.exists(temporary_path):
+            os.remove(temporary_path)
